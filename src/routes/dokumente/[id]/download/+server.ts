@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db/index.js';
-import { documents } from '$lib/server/db/schema.js';
-import { eq } from 'drizzle-orm';
+import { documents, documentVersions } from '$lib/server/db/schema.js';
+import { eq, and } from 'drizzle-orm';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -19,25 +19,53 @@ const MIME_TYPES: Record<string, string> = {
 	webp: 'image/webp'
 };
 
-export const GET: RequestHandler = async ({ params }) => {
-	const doc = db.select().from(documents).where(eq(documents.id, Number(params.id))).get();
+export const GET: RequestHandler = async ({ params, url }) => {
+	const docId = Number(params.id);
+	const doc = db.select().from(documents).where(eq(documents.id, docId)).get();
 	if (!doc) {
 		error(404, 'Dokument nicht gefunden');
 	}
 
-	const filePath = join(UPLOAD_DIR, doc.filename);
+	let filename = doc.filename;
+	let originalName = doc.originalName;
+	let mimeType = '';
+
+	const versionParam = url.searchParams.get('version');
+	if (versionParam !== null) {
+		const versionNumber = Number(versionParam);
+		if (!Number.isInteger(versionNumber) || versionNumber < 1) {
+			error(400, 'Ungültige Versionsnummer');
+		}
+		const version = db
+			.select()
+			.from(documentVersions)
+			.where(
+				and(eq(documentVersions.documentId, docId), eq(documentVersions.versionNumber, versionNumber))
+			)
+			.get();
+		if (!version) {
+			error(404, 'Version nicht gefunden');
+		}
+		filename = version.filename;
+		originalName = version.originalName;
+		mimeType = version.mimeType;
+	}
+
+	const filePath = join(UPLOAD_DIR, filename);
 	if (!existsSync(filePath)) {
 		error(404, 'Datei nicht gefunden');
 	}
 
 	const fileBuffer = readFileSync(filePath);
-	const ext = doc.originalName.split('.').pop()?.toLowerCase() || '';
-	const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+	if (!mimeType) {
+		const ext = originalName.split('.').pop()?.toLowerCase() || '';
+		mimeType = MIME_TYPES[ext] || 'application/octet-stream';
+	}
 
 	return new Response(fileBuffer, {
 		headers: {
-			'Content-Type': contentType,
-			'Content-Disposition': `attachment; filename="${doc.originalName}"`,
+			'Content-Type': mimeType,
+			'Content-Disposition': `attachment; filename="${originalName}"`,
 			'Content-Length': fileBuffer.length.toString()
 		}
 	});

@@ -77,6 +77,18 @@ export function initDatabase() {
 			created_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
 
+		CREATE TABLE IF NOT EXISTS document_versions (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			document_id INTEGER NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+			filename TEXT NOT NULL,
+			original_name TEXT NOT NULL,
+			size INTEGER NOT NULL DEFAULT 0,
+			mime_type TEXT NOT NULL DEFAULT '',
+			version_number INTEGER NOT NULL,
+			created_at TEXT NOT NULL DEFAULT (datetime('now')),
+			UNIQUE(document_id, version_number)
+		);
+
 		CREATE TABLE IF NOT EXISTS protocols (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			date TEXT NOT NULL,
@@ -107,6 +119,14 @@ export function initDatabase() {
 			given_at TEXT NOT NULL DEFAULT (datetime('now')),
 			withdrawn_at TEXT
 		);
+	`);
+
+	// Backfill: ensure every existing document has at least a v1 row in document_versions
+	sqlite.exec(`
+		INSERT INTO document_versions (document_id, filename, original_name, size, mime_type, version_number, created_at)
+		SELECT id, filename, original_name, 0, '', 1, created_at
+		FROM documents
+		WHERE id NOT IN (SELECT document_id FROM document_versions);
 	`);
 
 	// Migration: extend members table for membership applications (beantragt/abgelehnt statuses, birth_date, profession)

@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/server/db/index.js';
-import { documents } from '$lib/server/db/schema.js';
+import { documents, documentVersions } from '$lib/server/db/schema.js';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
@@ -55,13 +55,27 @@ export const actions: Actions = {
 		const buffer = Buffer.from(await file.arrayBuffer());
 		writeFileSync(join(UPLOAD_DIR, filename), buffer);
 
-		db.insert(documents)
+		const insertResult = db
+			.insert(documents)
 			.values({
 				title,
 				filename,
 				originalName: file.name,
 				category,
 				uploadedBy: locals.user?.id ?? null
+			})
+			.run();
+
+		const documentId = Number(insertResult.lastInsertRowid);
+
+		db.insert(documentVersions)
+			.values({
+				documentId,
+				filename,
+				originalName: file.name,
+				size: file.size,
+				mimeType: file.type,
+				versionNumber: 1
 			})
 			.run();
 

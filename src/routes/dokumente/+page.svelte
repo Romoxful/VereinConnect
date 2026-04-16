@@ -76,7 +76,7 @@
 			<div class="rounded-lg bg-white dark:bg-slate-800 p-4 shadow">
 				<div class="flex items-start justify-between">
 					<div class="min-w-0 flex-1">
-						<p class="font-medium text-gray-900 dark:text-slate-100">{doc.title}</p>
+						<a href="/dokumente/{doc.id}" class="font-medium text-gray-900 dark:text-slate-100 hover:text-red-700 dark:hover:text-red-400 hover:underline">{doc.title}</a>
 						<p class="truncate text-sm text-gray-500 dark:text-slate-400">{doc.originalName}</p>
 						<div class="mt-1 flex items-center gap-2">
 							<span class="rounded-full px-2 py-0.5 text-xs font-medium {categoryColors[doc.category]}">
@@ -128,7 +128,9 @@
 			<tbody class="divide-y">
 				{#each filtered as doc}
 					<tr class="hover:bg-gray-50 dark:hover:bg-slate-700">
-						<td class="px-4 py-3 font-medium text-gray-900 dark:text-slate-100">{doc.title}</td>
+						<td class="px-4 py-3 font-medium">
+							<a href="/dokumente/{doc.id}" class="text-gray-900 dark:text-slate-100 hover:text-red-700 dark:hover:text-red-400 hover:underline">{doc.title}</a>
+						</td>
 						<td class="px-4 py-3 text-gray-500 dark:text-slate-400">{doc.originalName}</td>
 						<td class="px-4 py-3">
 							<span class="rounded-full px-2 py-0.5 text-xs font-medium {categoryColors[doc.category]}">
