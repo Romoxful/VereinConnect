@@ -26,9 +26,13 @@ test.describe('Events management', () => {
 
 	test('shows validation error for missing required fields', async ({ page }) => {
 		await page.goto('/veranstaltungen/neu');
+		// Bypass HTML5 validation so the request reaches the server-side validator.
+		await page
+			.locator('form:not([action])')
+			.evaluate((form: HTMLFormElement) => (form.noValidate = true));
 		await page.click('button[type="submit"]');
-		// HTML5 validation blocks submit with empty required fields
-		await expect(page.locator('input[name="title"]:invalid')).toBeVisible();
+		await expect(page).toHaveURL(/\/veranstaltungen\/neu/);
+		await expect(page.getByText('Titel und Datum sind Pflichtfelder.')).toBeVisible();
 	});
 
 	test('can RSVP to an event', async ({ page }) => {
