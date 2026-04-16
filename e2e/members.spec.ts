@@ -1,12 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { disableHtml5Validation, loginAsAdmin } from './helpers';
 
 test.describe('Members management', () => {
 	test.beforeEach(async ({ page }) => {
-		// Login as admin (vorstand)
-		await page.goto('/login');
-		await page.fill('input[name="email"]', 'admin@foerderverein.de');
-		await page.fill('input[name="password"]', 'admin123');
-		await page.click('button[type="submit"]');
+		await loginAsAdmin(page);
 		await expect(page).toHaveURL(/\/dashboard/);
 	});
 
@@ -25,10 +22,12 @@ test.describe('Members management', () => {
 		await expect(page.getByRole('heading', { name: 'Mitglieder' })).toBeVisible();
 	});
 
-	test('shows validation error for missing required fields', async ({ page }) => {
+	test('shows server validation error in UI for missing required fields', async ({ page }) => {
 		await page.goto('/mitglieder/neu');
+		await disableHtml5Validation(page);
 		await page.click('button[type="submit"]');
-		// HTML5 validation keeps us on the form page
 		await expect(page).toHaveURL(/\/mitglieder\/neu/);
+		await expect(page.getByTestId('form-error')).toBeVisible();
+		await expect(page.getByTestId('form-error')).toContainText('Pflichtfelder');
 	});
 });

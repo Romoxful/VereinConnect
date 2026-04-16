@@ -38,7 +38,7 @@
 <h1 class="mb-6 text-2xl font-bold text-gray-900">{m.firstName} {m.lastName}</h1>
 
 {#if form?.error}
-	<div class="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">{form.error}</div>
+	<div data-testid="form-error" role="alert" class="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">{form.error}</div>
 {/if}
 
 {#if isVorstand}

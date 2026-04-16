@@ -29,7 +29,11 @@
 </div>
 
 <div class="max-w-2xl">
-	<h1 class="mb-2 text-2xl font-bold text-gray-900">{e.title}</h1>
+	{#if form?.error}
+	<div data-testid="form-error" role="alert" class="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">{form.error}</div>
+{/if}
+
+<h1 class="mb-2 text-2xl font-bold text-gray-900">{e.title}</h1>
 	<p class="mb-1 text-sm text-gray-500">
 		{new Date(e.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
 		{#if e.time} um {e.time}{/if}
