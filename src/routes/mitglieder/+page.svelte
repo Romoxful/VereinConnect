@@ -55,12 +55,26 @@
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 	<h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Mitglieder</h1>
 	{#if isVorstand}
-		<a
-			href="/mitglieder/neu"
-			class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
-		>
-			+ Neues Mitglied
-		</a>
+		<div class="flex flex-wrap gap-2">
+			<a
+				href="/api/mitglieder/export"
+				class="inline-flex items-center rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+			>
+				⬇ CSV-Export
+			</a>
+			<a
+				href="/import"
+				class="inline-flex items-center rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+			>
+				⬆ CSV-Import
+			</a>
+			<a
+				href="/mitglieder/neu"
+				class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
+			>
+				+ Neues Mitglied
+			</a>
+		</div>
 	{/if}
 </div>
 

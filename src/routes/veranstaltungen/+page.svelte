@@ -14,14 +14,22 @@
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 	<h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Veranstaltungen</h1>
-	{#if data.user?.role === 'vorstand'}
+	<div class="flex flex-wrap gap-2">
 		<a
-			href="/veranstaltungen/neu"
-			class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
+			href="/api/veranstaltungen/export"
+			class="inline-flex items-center rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
 		>
-			+ Neue Veranstaltung
+			📅 Kalender (ICS)
 		</a>
-	{/if}
+		{#if data.user?.role === 'vorstand'}
+			<a
+				href="/veranstaltungen/neu"
+				class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
+			>
+				+ Neue Veranstaltung
+			</a>
+		{/if}
+	</div>
 </div>
 
 {#if upcoming.length > 0}

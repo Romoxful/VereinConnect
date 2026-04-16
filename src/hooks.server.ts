@@ -31,7 +31,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	// Protect Vorstand-only routes
-	const vorstandPaths = ['/mitglieder/neu', '/veranstaltungen/neu', '/dokumente/neu', '/protokolle/neu', '/beitraege/neu'];
+	const vorstandPaths = ['/mitglieder/neu', '/veranstaltungen/neu', '/dokumente/neu', '/protokolle/neu', '/beitraege/neu', '/import', '/api/mitglieder/export'];
 	const isVorstandRoute = vorstandPaths.some((p) => event.url.pathname.startsWith(p));
 
 	if (isVorstandRoute && event.locals.user?.role !== 'vorstand') {

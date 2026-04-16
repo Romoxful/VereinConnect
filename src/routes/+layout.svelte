@@ -7,14 +7,17 @@
 
 	let menuOpen = $state(false);
 
-	const navItems = [
+	const navItems = $derived([
 		{ href: '/dashboard', label: 'Dashboard', icon: '📊' },
 		{ href: '/mitglieder', label: 'Mitglieder', icon: '👥' },
 		{ href: '/beitraege', label: 'Beiträge', icon: '💶' },
 		{ href: '/veranstaltungen', label: 'Veranstaltungen', icon: '📅' },
 		{ href: '/dokumente', label: 'Dokumente', icon: '📄' },
-		{ href: '/protokolle', label: 'Protokolle', icon: '📝' }
-	];
+		{ href: '/protokolle', label: 'Protokolle', icon: '📝' },
+		...(data.user?.role === 'vorstand'
+			? [{ href: '/import', label: 'Import', icon: '📥' }]
+			: [])
+	]);
 </script>
 
 {#if data.user}
