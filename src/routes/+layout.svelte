@@ -12,6 +12,7 @@
 		{ href: '/mitglieder', label: 'Mitglieder', icon: '👥' },
 		{ href: '/beitraege', label: 'Beiträge', icon: '💶' },
 		{ href: '/veranstaltungen', label: 'Veranstaltungen', icon: '📅' },
+		{ href: '/aufgaben', label: 'Aufgaben', icon: '✅' },
 		{ href: '/dokumente', label: 'Dokumente', icon: '📄' },
 		{ href: '/protokolle', label: 'Protokolle', icon: '📝' },
 		{ href: '/profil', label: 'Mein Profil', icon: '👤' },

@@ -45,6 +45,19 @@
 		<p class="text-3xl font-bold text-red-700 dark:text-red-400">{data.stats.overdueDues}</p>
 		<p class="text-sm text-gray-500 dark:text-slate-400">Überfällige Beiträge</p>
 	</div>
+
+	<a href="/aufgaben" class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow hover:shadow-md transition-shadow">
+		<div class="text-3xl">✅</div>
+		<h2 class="mt-2 text-lg font-semibold text-gray-900 dark:text-slate-100">Offene Aufgaben</h2>
+		<p class="text-3xl font-bold text-red-700 dark:text-red-400">{data.stats.openTasks}</p>
+		<p class="text-sm text-gray-500 dark:text-slate-400">
+			{#if data.stats.overdueTasks > 0}
+				{data.stats.overdueTasks} überfällig
+			{:else}
+				Keine Aufgaben überfällig
+			{/if}
+		</p>
+	</a>
 </div>
 
 {#if data.upcomingEvents.length > 0}

@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db/index.js';
-import { members, events, dues } from '$lib/server/db/schema.js';
-import { eq, gte, sql } from 'drizzle-orm';
+import { members, events, dues, tasks } from '$lib/server/db/schema.js';
+import { eq, gte, ne, and, lt, sql, or } from 'drizzle-orm';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
 	const today = new Date().toISOString().split('T')[0];
 
 	const memberCount = db
@@ -43,13 +43,42 @@ export const load: PageServerLoad = async () => {
 		.where(eq(dues.status, 'überfällig'))
 		.get();
 
+	const openTasksWhere = locals.user
+		? and(
+				ne(tasks.status, 'erledigt'),
+				or(eq(tasks.assignedTo, locals.user.id), eq(tasks.createdBy, locals.user.id))
+			)
+		: ne(tasks.status, 'erledigt');
+
+	const openTasks = db
+		.select({ count: sql<number>`count(*)` })
+		.from(tasks)
+		.where(openTasksWhere)
+		.get();
+
+	const overdueTasksWhere = locals.user
+		? and(
+				ne(tasks.status, 'erledigt'),
+				lt(tasks.dueDate, today),
+				or(eq(tasks.assignedTo, locals.user.id), eq(tasks.createdBy, locals.user.id))
+			)
+		: and(ne(tasks.status, 'erledigt'), lt(tasks.dueDate, today));
+
+	const overdueTasks = db
+		.select({ count: sql<number>`count(*)` })
+		.from(tasks)
+		.where(overdueTasksWhere)
+		.get();
+
 	return {
 		stats: {
 			memberCount: memberCount?.count ?? 0,
 			totalMembers: totalMembers?.count ?? 0,
 			upcomingEvents: upcomingEventCount?.count ?? 0,
 			openDues: openDues?.count ?? 0,
-			overdueDues: overdueDues?.count ?? 0
+			overdueDues: overdueDues?.count ?? 0,
+			openTasks: openTasks?.count ?? 0,
+			overdueTasks: overdueTasks?.count ?? 0
 		},
 		upcomingEvents
 	};

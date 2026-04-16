@@ -119,6 +119,20 @@ export function initDatabase() {
 			given_at TEXT NOT NULL DEFAULT (datetime('now')),
 			withdrawn_at TEXT
 		);
+
+		CREATE TABLE IF NOT EXISTS tasks (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			title TEXT NOT NULL,
+			description TEXT,
+			status TEXT NOT NULL DEFAULT 'offen' CHECK(status IN ('offen', 'in_bearbeitung', 'erledigt')),
+			priority TEXT NOT NULL DEFAULT 'mittel' CHECK(priority IN ('niedrig', 'mittel', 'hoch')),
+			due_date TEXT,
+			assigned_to INTEGER REFERENCES users(id) ON DELETE SET NULL,
+			created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+			veranstaltung_id INTEGER REFERENCES events(id) ON DELETE SET NULL,
+			created_at TEXT NOT NULL DEFAULT (datetime('now')),
+			updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+		);
 	`);
 
 	// Backfill: ensure every existing document has at least a v1 row in document_versions
