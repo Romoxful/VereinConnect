@@ -27,8 +27,14 @@ test.describe('Members management', () => {
 
 	test('shows validation error for missing required fields', async ({ page }) => {
 		await page.goto('/mitglieder/neu');
+		// Bypass HTML5 validation so the request reaches the server-side validator.
+		await page
+			.locator('form:not([action])')
+			.evaluate((form: HTMLFormElement) => (form.noValidate = true));
 		await page.click('button[type="submit"]');
-		// HTML5 validation keeps us on the form page
 		await expect(page).toHaveURL(/\/mitglieder\/neu/);
+		await expect(
+			page.getByText('Vorname, Nachname und Mitglied seit sind Pflichtfelder.')
+		).toBeVisible();
 	});
 });

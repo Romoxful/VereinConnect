@@ -23,8 +23,11 @@ test.describe('Login page', () => {
 
 	test('shows error for empty fields', async ({ page }) => {
 		await page.goto('/login');
-		// HTML5 validation blocks submit with empty required fields
-		await expect(page.locator('input[name="email"]:invalid')).toBeVisible();
+		// Bypass HTML5 validation so the request reaches the server-side validator.
+		await page.locator('form').evaluate((form: HTMLFormElement) => (form.noValidate = true));
+		await page.click('button[type="submit"]');
+		await expect(page).toHaveURL(/\/login/);
+		await expect(page.getByText('Bitte E-Mail und Passwort eingeben.')).toBeVisible();
 	});
 
 	test('logs in with valid credentials and redirects to dashboard', async ({ page }) => {
