@@ -18,7 +18,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	// Protect routes — redirect unauthenticated users to login
-	const publicPaths = ['/login', '/api/health', '/datenschutz', '/impressum'];
+	const publicPaths = [
+		'/login',
+		'/api/health',
+		'/datenschutz',
+		'/impressum',
+		'/passwort-zuruecksetzen'
+	];
 	const isPublic = publicPaths.some((p) => event.url.pathname.startsWith(p));
 
 	if (!isPublic && !event.locals.user) {

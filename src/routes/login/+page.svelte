@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { form }: { form: ActionData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <div class="flex min-h-screen items-center justify-center px-4">
@@ -11,6 +11,15 @@
 				<h1 class="text-2xl font-bold text-red-700">Förderverein FF</h1>
 				<p class="mt-1 text-sm text-gray-500">Freiwillige Feuerwehr</p>
 			</div>
+
+			{#if data.resetSuccess}
+				<div
+					class="mb-4 rounded bg-green-50 p-3 text-sm text-green-700"
+					data-testid="reset-success"
+				>
+					Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich nun anmelden.
+				</div>
+			{/if}
 
 			{#if form?.error}
 				<div class="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">
@@ -49,6 +58,15 @@
 					Anmelden
 				</button>
 			</form>
+
+			<p class="mt-3 text-center text-sm">
+				<a
+					href="/passwort-zuruecksetzen"
+					class="text-red-700 hover:text-red-800 hover:underline"
+				>
+					Passwort vergessen?
+				</a>
+			</p>
 
 			<p class="mt-4 text-center text-xs text-gray-400">
 				Standard: admin@foerderverein.de / admin123

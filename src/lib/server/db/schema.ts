@@ -116,6 +116,29 @@ export const dues = sqliteTable('dues', {
 		.$defaultFn(() => new Date().toISOString())
 });
 
+export const passwordResets = sqliteTable('password_resets', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	tokenHash: text('token_hash').notNull().unique(),
+	expiresAt: text('expires_at').notNull(),
+	usedAt: text('used_at'),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
+export const sentEmails = sqliteTable('sent_emails', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	toEmail: text('to_email').notNull(),
+	subject: text('subject').notNull(),
+	body: text('body').notNull(),
+	sentAt: text('sent_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
 export const consents = sqliteTable('consents', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	memberId: integer('member_id')

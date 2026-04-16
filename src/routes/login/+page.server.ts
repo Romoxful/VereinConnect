@@ -5,10 +5,11 @@ import { users } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
 import { verifyPassword, createSession } from '$lib/server/auth.js';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) {
 		redirect(302, '/dashboard');
 	}
+	return { resetSuccess: url.searchParams.get('reset') === '1' };
 };
 
 export const actions: Actions = {
