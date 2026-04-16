@@ -191,6 +191,37 @@ describe('RSVP integration', () => {
 		expect(otherRsvp).toBeUndefined();
 	});
 
+	it('loads events with per-user RSVP status (calendar query)', () => {
+		db.insert(rsvps).values({ eventId, userId: mitgliedId, status: 'vielleicht' }).run();
+
+		const userId = mitgliedId;
+		const rows = db
+			.select({
+				id: events.id,
+				title: events.title,
+				date: events.date,
+				myRsvpStatus: sql<
+					'zugesagt' | 'abgesagt' | 'vielleicht' | null
+				>`(SELECT status FROM rsvps WHERE rsvps.event_id = events.id AND rsvps.user_id = ${userId} LIMIT 1)`
+			})
+			.from(events)
+			.all();
+
+		expect(rows).toHaveLength(1);
+		expect(rows[0].myRsvpStatus).toBe('vielleicht');
+
+		const otherUserRows = db
+			.select({
+				id: events.id,
+				myRsvpStatus: sql<
+					'zugesagt' | 'abgesagt' | 'vielleicht' | null
+				>`(SELECT status FROM rsvps WHERE rsvps.event_id = events.id AND rsvps.user_id = ${vorstandId} LIMIT 1)`
+			})
+			.from(events)
+			.all();
+		expect(otherUserRows[0].myRsvpStatus).toBeNull();
+	});
+
 	it('deleting event cascades to RSVPs', () => {
 		db.insert(rsvps).values({ eventId, userId: mitgliedId, status: 'zugesagt' }).run();
 		db.insert(rsvps).values({ eventId, userId: vorstandId, status: 'zugesagt' }).run();

@@ -35,6 +35,27 @@ test.describe('Events management', () => {
 		await expect(page.getByText('Titel und Datum sind Pflichtfelder.')).toBeVisible();
 	});
 
+	test('can switch to calendar view and see events', async ({ page }) => {
+		const now = new Date();
+		const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(Math.min(now.getDate(), 28)).padStart(2, '0')}`;
+
+		await page.goto('/veranstaltungen/neu');
+		await page.fill('input[name="title"]', 'Kalendertest');
+		await page.fill('input[name="date"]', iso);
+		await page.click('button[type="submit"]');
+		await expect(page).toHaveURL(/\/veranstaltungen$/);
+
+		await page.getByRole('link', { name: /Kalender/ }).first().click();
+		await expect(page).toHaveURL(/\/veranstaltungen\/kalender/);
+
+		await expect(page.getByRole('link', { name: /Kalendertest/ }).first()).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Monat' })).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Woche' })).toBeVisible();
+
+		await page.getByRole('link', { name: /Kalendertest/ }).first().click();
+		await expect(page).toHaveURL(/\/veranstaltungen\/\d+/);
+	});
+
 	test('can RSVP to an event', async ({ page }) => {
 		// First create an event
 		await page.goto('/veranstaltungen/neu');
