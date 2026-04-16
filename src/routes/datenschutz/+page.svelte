@@ -3,11 +3,11 @@
 </svelte:head>
 
 <div class="mx-auto max-w-3xl py-8">
-	<h1 class="mb-6 text-2xl font-bold text-gray-900">Datenschutzerklärung</h1>
+	<h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-slate-100">Datenschutzerklärung</h1>
 
-	<div class="space-y-6 text-sm leading-relaxed text-gray-700">
+	<div class="space-y-6 text-sm leading-relaxed text-gray-700 dark:text-slate-300">
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">1. Verantwortlicher</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">1. Verantwortlicher</h2>
 			<p>
 				Förderverein der Freiwilligen Feuerwehr e.V.<br />
 				[Straße und Hausnummer]<br />
@@ -17,7 +17,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">2. Erhebung und Speicherung personenbezogener Daten</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">2. Erhebung und Speicherung personenbezogener Daten</h2>
 			<p>
 				Wir erheben und speichern personenbezogene Daten unserer Mitglieder zum Zweck der Vereinsverwaltung.
 				Dazu gehören insbesondere:
@@ -33,7 +33,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">3. Rechtsgrundlage der Verarbeitung</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">3. Rechtsgrundlage der Verarbeitung</h2>
 			<p>
 				Die Verarbeitung personenbezogener Daten erfolgt auf Grundlage von:
 			</p>
@@ -45,7 +45,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">4. Einwilligungen</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">4. Einwilligungen</h2>
 			<p>
 				Für bestimmte Verarbeitungszwecke holen wir die ausdrückliche Einwilligung der Mitglieder ein:
 			</p>
@@ -60,7 +60,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">5. Weitergabe von Daten</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">5. Weitergabe von Daten</h2>
 			<p>
 				Personenbezogene Daten werden nicht an Dritte weitergegeben, es sei denn, dies ist zur Erfüllung
 				gesetzlicher Pflichten erforderlich (z.B. Finanzbehörden).
@@ -68,7 +68,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">6. Speicherdauer</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">6. Speicherdauer</h2>
 			<p>
 				Personenbezogene Daten werden nur so lange gespeichert, wie es für die Zwecke der Verarbeitung
 				erforderlich ist. Nach Beendigung der Mitgliedschaft werden die Daten gemäß den gesetzlichen
@@ -78,7 +78,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">7. Betroffenenrechte</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">7. Betroffenenrechte</h2>
 			<p>Sie haben folgende Rechte:</p>
 			<ul class="ml-6 mt-2 list-disc space-y-1">
 				<li><strong>Auskunftsrecht</strong> (Art. 15 DSGVO) — Recht auf Auskunft über Ihre gespeicherten Daten</li>
@@ -95,7 +95,7 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">8. Technische Sicherheitsmaßnahmen</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">8. Technische Sicherheitsmaßnahmen</h2>
 			<ul class="ml-6 mt-2 list-disc space-y-1">
 				<li>Zugangsschutz durch Benutzeranmeldung mit Passwort</li>
 				<li>Rollenbasierte Zugriffskontrolle (Vorstand / Mitglied)</li>
@@ -105,13 +105,13 @@
 		</section>
 
 		<section>
-			<h2 class="mb-2 text-lg font-semibold text-gray-900">9. Beschwerderecht</h2>
+			<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-slate-100">9. Beschwerderecht</h2>
 			<p>
 				Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren,
 				wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer Daten gegen die DSGVO verstößt.
 			</p>
 		</section>
 
-		<p class="mt-8 text-xs text-gray-400">Stand: April 2026</p>
+		<p class="mt-8 text-xs text-gray-400 dark:text-slate-500">Stand: April 2026</p>
 	</div>
 </div>
