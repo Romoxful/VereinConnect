@@ -1,11 +1,12 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { createTestDb } from '../../../tests/db-helper.js';
-import { users, sessions, members, events, rsvps, documents, protocols } from './schema.js';
+import { users, sessions, members, events, rsvps, documents, protocols, tasks } from './schema.js';
 import { eq } from 'drizzle-orm';
 
 const { db, sqlite } = createTestDb();
 
 afterEach(() => {
+	sqlite.exec('DELETE FROM tasks');
 	sqlite.exec('DELETE FROM protocols');
 	sqlite.exec('DELETE FROM documents');
 	sqlite.exec('DELETE FROM rsvps');
@@ -242,5 +243,66 @@ describe('protocols table', () => {
 			.run();
 		const protocol = db.select().from(protocols).where(eq(protocols.title, 'Linked')).get();
 		expect(protocol!.createdBy).toBe(userId);
+	});
+});
+
+describe('tasks table', () => {
+	it('inserts a task with required fields', () => {
+		db.insert(tasks).values({ title: 'Raum buchen' }).run();
+		const all = db.select().from(tasks).all();
+		expect(all).toHaveLength(1);
+		expect(all[0].title).toBe('Raum buchen');
+		expect(all[0].status).toBe('offen');
+		expect(all[0].priority).toBe('mittel');
+	});
+
+	it('defaults status to offen and priority to mittel', () => {
+		db.insert(tasks).values({ title: 'Default' }).run();
+		const t = db.select().from(tasks).get();
+		expect(t!.status).toBe('offen');
+		expect(t!.priority).toBe('mittel');
+	});
+
+	it('rejects invalid status', () => {
+		expect(() => {
+			sqlite.exec("INSERT INTO tasks (title, status) VALUES ('X', 'done')");
+		}).toThrow();
+	});
+
+	it('rejects invalid priority', () => {
+		expect(() => {
+			sqlite.exec("INSERT INTO tasks (title, priority) VALUES ('X', 'urgent')");
+		}).toThrow();
+	});
+
+	it('links task to assigned user and creator', () => {
+		const aRes = db.insert(users).values({ email: 'a@test.de', passwordHash: 'h', name: 'A' }).run();
+		const cRes = db.insert(users).values({ email: 'c@test.de', passwordHash: 'h', name: 'C' }).run();
+		const assignedTo = Number(aRes.lastInsertRowid);
+		const createdBy = Number(cRes.lastInsertRowid);
+		db.insert(tasks).values({ title: 'Linked', assignedTo, createdBy }).run();
+		const t = db.select().from(tasks).get();
+		expect(t!.assignedTo).toBe(assignedTo);
+		expect(t!.createdBy).toBe(createdBy);
+	});
+
+	it('sets assigned_to to null when assigned user is deleted', () => {
+		const res = db.insert(users).values({ email: 'del@test.de', passwordHash: 'h', name: 'D' }).run();
+		const userId = Number(res.lastInsertRowid);
+		db.insert(tasks).values({ title: 'Orphan', assignedTo: userId }).run();
+		db.delete(users).where(eq(users.id, userId)).run();
+		const t = db.select().from(tasks).get();
+		expect(t!.assignedTo).toBeNull();
+	});
+
+	it('links task to an event and nulls on event delete', () => {
+		const eRes = db.insert(events).values({ title: 'Sitzung', date: '2025-05-01' }).run();
+		const eventId = Number(eRes.lastInsertRowid);
+		db.insert(tasks).values({ title: 'Vorbereiten', veranstaltungId: eventId }).run();
+		let t = db.select().from(tasks).get();
+		expect(t!.veranstaltungId).toBe(eventId);
+		db.delete(events).where(eq(events.id, eventId)).run();
+		t = db.select().from(tasks).get();
+		expect(t!.veranstaltungId).toBeNull();
 	});
 });

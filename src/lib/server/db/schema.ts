@@ -135,6 +135,30 @@ export const dues = sqliteTable('dues', {
 		.$defaultFn(() => new Date().toISOString())
 });
 
+export const tasks = sqliteTable('tasks', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	title: text('title').notNull(),
+	description: text('description'),
+	status: text('status', { enum: ['offen', 'in_bearbeitung', 'erledigt'] })
+		.notNull()
+		.default('offen'),
+	priority: text('priority', { enum: ['niedrig', 'mittel', 'hoch'] })
+		.notNull()
+		.default('mittel'),
+	dueDate: text('due_date'),
+	assignedTo: integer('assigned_to').references(() => users.id, { onDelete: 'set null' }),
+	createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+	veranstaltungId: integer('veranstaltung_id').references(() => events.id, {
+		onDelete: 'set null'
+	}),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString()),
+	updatedAt: text('updated_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
 export const consents = sqliteTable('consents', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	memberId: integer('member_id')
