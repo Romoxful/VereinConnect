@@ -14,6 +14,7 @@
 		{ href: '/veranstaltungen', label: 'Veranstaltungen', icon: '📅' },
 		{ href: '/dokumente', label: 'Dokumente', icon: '📄' },
 		{ href: '/protokolle', label: 'Protokolle', icon: '📝' },
+		{ href: '/profil', label: 'Mein Profil', icon: '👤' },
 		...(data.user?.role === 'vorstand'
 			? [{ href: '/import', label: 'Import', icon: '📥' }]
 			: [])
