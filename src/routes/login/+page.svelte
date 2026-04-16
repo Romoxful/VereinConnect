@@ -6,39 +6,39 @@
 
 <div class="flex min-h-screen items-center justify-center px-4">
 	<div class="w-full max-w-sm">
-		<div class="rounded-lg bg-white p-6 shadow-md">
+		<div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow-md">
 			<div class="mb-6 text-center">
-				<h1 class="text-2xl font-bold text-red-700">Förderverein FF</h1>
-				<p class="mt-1 text-sm text-gray-500">Freiwillige Feuerwehr</p>
+				<h1 class="text-2xl font-bold text-red-700 dark:text-red-400">Förderverein FF</h1>
+				<p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Freiwillige Feuerwehr</p>
 			</div>
 
 			{#if form?.error}
-				<div class="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">
+				<div class="mb-4 rounded bg-red-50 dark:bg-red-950 p-3 text-sm text-red-600 dark:text-red-400">
 					{form.error}
 				</div>
 			{/if}
 
 			<form method="POST" class="space-y-4">
 				<div>
-					<label for="email" class="block text-sm font-medium text-gray-700">E-Mail</label>
+					<label for="email" class="block text-sm font-medium text-gray-700 dark:text-slate-300">E-Mail</label>
 					<input
 						id="email"
 						name="email"
 						type="email"
 						required
 						value={form?.email ?? ''}
-						class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
+						class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
 					/>
 				</div>
 
 				<div>
-					<label for="password" class="block text-sm font-medium text-gray-700">Passwort</label>
+					<label for="password" class="block text-sm font-medium text-gray-700 dark:text-slate-300">Passwort</label>
 					<input
 						id="password"
 						name="password"
 						type="password"
 						required
-						class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
+						class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
 					/>
 				</div>
 
@@ -50,8 +50,13 @@
 				</button>
 			</form>
 
-			<p class="mt-4 text-center text-xs text-gray-400">
+			<p class="mt-4 text-center text-xs text-gray-400 dark:text-slate-500">
 				Standard: admin@foerderverein.de / admin123
+			</p>
+
+			<p class="mt-3 text-center text-sm text-gray-600 dark:text-slate-400">
+				Noch kein Mitglied?
+				<a href="/aufnahme" class="text-red-700 dark:text-red-400 hover:underline">Mitgliedsantrag stellen</a>
 			</p>
 		</div>
 	</div>

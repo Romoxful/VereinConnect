@@ -14,19 +14,26 @@ export const actions: Actions = {
 		const street = data.get('street')?.toString()?.trim() || null;
 		const zip = data.get('zip')?.toString()?.trim() || null;
 		const city = data.get('city')?.toString()?.trim() || null;
+		const birthDate = data.get('birthDate')?.toString()?.trim() || null;
+		const profession = data.get('profession')?.toString()?.trim() || null;
 		const memberSince = data.get('memberSince')?.toString() ?? '';
-		const status = data.get('status')?.toString() ?? 'aktiv';
+		const status = (data.get('status')?.toString() ?? 'aktiv') as
+			| 'aktiv'
+			| 'inaktiv'
+			| 'ausgetreten'
+			| 'beantragt'
+			| 'abgelehnt';
 		const notes = data.get('notes')?.toString()?.trim() || null;
 
 		if (!firstName || !lastName || !memberSince) {
 			return fail(400, {
 				error: 'Vorname, Nachname und Mitglied seit sind Pflichtfelder.',
-				firstName, lastName, email, phone, street, zip, city, memberSince, status, notes
+				firstName, lastName, email, phone, street, zip, city, birthDate, profession, memberSince, status, notes
 			});
 		}
 
 		db.insert(members).values({
-			firstName, lastName, email, phone, street, zip, city, memberSince, status, notes
+			firstName, lastName, email, phone, street, zip, city, birthDate, profession, memberSince, status, notes
 		}).run();
 
 		redirect(302, '/mitglieder');
