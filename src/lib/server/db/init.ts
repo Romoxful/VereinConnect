@@ -40,8 +40,10 @@ export function initDatabase() {
 			street TEXT,
 			zip TEXT,
 			city TEXT,
+			birth_date TEXT,
+			profession TEXT,
 			member_since TEXT NOT NULL,
-			status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten')),
+			status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
 			notes TEXT,
 			created_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
@@ -106,6 +108,39 @@ export function initDatabase() {
 			withdrawn_at TEXT
 		);
 	`);
+
+	// Migration: extend members table for membership applications (beantragt/abgelehnt statuses, birth_date, profession)
+	const membersTableSql = sqlite
+		.prepare(`SELECT sql FROM sqlite_master WHERE type='table' AND name='members'`)
+		.get() as { sql: string } | undefined;
+	if (membersTableSql && !membersTableSql.sql.includes("'beantragt'")) {
+		sqlite.exec(`
+			PRAGMA foreign_keys = OFF;
+			BEGIN TRANSACTION;
+			CREATE TABLE members_new (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				first_name TEXT NOT NULL,
+				last_name TEXT NOT NULL,
+				email TEXT,
+				phone TEXT,
+				street TEXT,
+				zip TEXT,
+				city TEXT,
+				birth_date TEXT,
+				profession TEXT,
+				member_since TEXT NOT NULL,
+				status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
+				notes TEXT,
+				created_at TEXT NOT NULL DEFAULT (datetime('now'))
+			);
+			INSERT INTO members_new (id, first_name, last_name, email, phone, street, zip, city, member_since, status, notes, created_at)
+				SELECT id, first_name, last_name, email, phone, street, zip, city, member_since, status, notes, created_at FROM members;
+			DROP TABLE members;
+			ALTER TABLE members_new RENAME TO members;
+			COMMIT;
+			PRAGMA foreign_keys = ON;
+		`);
+	}
 
 	// Seed default admin user if no users exist
 	const userCount = sqlite.prepare('SELECT COUNT(*) as count FROM users').get() as {

@@ -52,8 +52,15 @@ export const actions: Actions = {
 		const street = data.get('street')?.toString()?.trim() || null;
 		const zip = data.get('zip')?.toString()?.trim() || null;
 		const city = data.get('city')?.toString()?.trim() || null;
+		const birthDate = data.get('birthDate')?.toString()?.trim() || null;
+		const profession = data.get('profession')?.toString()?.trim() || null;
 		const memberSince = data.get('memberSince')?.toString() ?? '';
-		const status = data.get('status')?.toString() ?? 'aktiv';
+		const status = (data.get('status')?.toString() ?? 'aktiv') as
+			| 'aktiv'
+			| 'inaktiv'
+			| 'ausgetreten'
+			| 'beantragt'
+			| 'abgelehnt';
 		const notes = data.get('notes')?.toString()?.trim() || null;
 
 		if (!firstName || !lastName || !memberSince) {
@@ -61,7 +68,7 @@ export const actions: Actions = {
 		}
 
 		db.update(members)
-			.set({ firstName, lastName, email, phone, street, zip, city, memberSince, status, notes })
+			.set({ firstName, lastName, email, phone, street, zip, city, birthDate, profession, memberSince, status, notes })
 			.where(eq(members.id, Number(params.id)))
 			.run();
 

@@ -27,8 +27,10 @@ const SCHEMA_SQL = `
 		street TEXT,
 		zip TEXT,
 		city TEXT,
+		birth_date TEXT,
+		profession TEXT,
 		member_since TEXT NOT NULL,
-		status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten')),
+		status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
 		notes TEXT,
 		created_at TEXT NOT NULL DEFAULT (datetime('now'))
 	);

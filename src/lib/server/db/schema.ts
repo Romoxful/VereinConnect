@@ -30,8 +30,12 @@ export const members = sqliteTable('members', {
 	street: text('street'),
 	zip: text('zip'),
 	city: text('city'),
+	birthDate: text('birth_date'),
+	profession: text('profession'),
 	memberSince: text('member_since').notNull(),
-	status: text('status', { enum: ['aktiv', 'inaktiv', 'ausgetreten'] })
+	status: text('status', {
+		enum: ['aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt']
+	})
 		.notNull()
 		.default('aktiv'),
 	notes: text('notes'),
