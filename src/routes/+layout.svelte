@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import type { LayoutData } from './$types';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
 
@@ -17,18 +18,19 @@
 </script>
 
 {#if data.user}
-	<div class="min-h-screen bg-gray-50">
+	<div class="min-h-screen bg-gray-50 dark:bg-slate-900">
 		<!-- Mobile header -->
-		<header class="bg-red-700 text-white shadow-md">
+		<header class="bg-red-700 text-white shadow-md dark:bg-red-900">
 			<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 				<a href="/dashboard" class="text-lg font-bold">Förderverein FF</a>
 				<div class="flex items-center gap-3">
 					<span class="hidden text-sm sm:inline">{data.user.name}</span>
 					<span
-						class="rounded-full bg-red-800 px-2 py-0.5 text-xs uppercase"
+						class="rounded-full bg-red-800 px-2 py-0.5 text-xs uppercase dark:bg-red-950"
 					>
 						{data.user.role}
 					</span>
+					<ThemeToggle variant="header" />
 					<button
 						class="rounded p-1 hover:bg-red-600 sm:hidden"
 						onclick={() => (menuOpen = !menuOpen)}
@@ -47,7 +49,7 @@
 
 			<!-- Mobile nav -->
 			{#if menuOpen}
-				<nav class="border-t border-red-600 px-4 py-2 sm:hidden">
+				<nav class="border-t border-red-600 px-4 py-2 sm:hidden dark:border-red-800">
 					{#each navItems as item}
 						<a
 							href={item.disabled ? undefined : item.href}
@@ -67,7 +69,7 @@
 							Abmelden
 						</button>
 					</form>
-					<div class="mt-2 border-t border-red-600 pt-2">
+					<div class="mt-2 border-t border-red-600 pt-2 dark:border-red-800">
 						<a href="/datenschutz" class="block rounded px-3 py-1.5 text-xs opacity-75 hover:bg-red-600" onclick={() => (menuOpen = false)}>Datenschutz</a>
 						<a href="/impressum" class="block rounded px-3 py-1.5 text-xs opacity-75 hover:bg-red-600" onclick={() => (menuOpen = false)}>Impressum</a>
 					</div>
@@ -77,34 +79,37 @@
 
 		<div class="mx-auto max-w-7xl sm:flex">
 			<!-- Desktop sidebar -->
-			<nav class="hidden w-56 shrink-0 border-r border-gray-200 bg-white p-4 sm:block">
+			<nav class="hidden w-56 shrink-0 border-r border-gray-200 bg-white p-4 sm:block dark:border-slate-700 dark:bg-slate-800">
 				<ul class="space-y-1">
 					{#each navItems as item}
 						<li>
 							<a
 								href={item.disabled ? undefined : item.href}
-								class="block rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								class="block rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-700"
 								class:opacity-50={item.disabled}
 								class:cursor-not-allowed={item.disabled}
 							>
 								{item.icon} {item.label}
 								{#if item.disabled}
-									<span class="text-xs text-gray-400">(Phase 2)</span>
+									<span class="text-xs text-gray-400 dark:text-slate-500">(Phase 2)</span>
 								{/if}
 							</a>
 						</li>
 					{/each}
 				</ul>
-				<div class="mt-6 border-t border-gray-200 pt-4">
+				<div class="mt-6 border-t border-gray-200 pt-4 dark:border-slate-700">
+					<ThemeToggle variant="sidebar" />
+				</div>
+				<div class="mt-2 border-t border-gray-200 pt-4 dark:border-slate-700">
 					<form method="POST" action="/logout">
-						<button class="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+						<button class="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-700">
 							Abmelden
 						</button>
 					</form>
 				</div>
-				<div class="mt-4 border-t border-gray-200 pt-4">
-					<a href="/datenschutz" class="block rounded-lg px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100">Datenschutz</a>
-					<a href="/impressum" class="block rounded-lg px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100">Impressum</a>
+				<div class="mt-4 border-t border-gray-200 pt-4 dark:border-slate-700">
+					<a href="/datenschutz" class="block rounded-lg px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-slate-700">Datenschutz</a>
+					<a href="/impressum" class="block rounded-lg px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-slate-700">Impressum</a>
 				</div>
 			</nav>
 
@@ -115,7 +120,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="min-h-screen bg-gray-50">
+	<div class="min-h-screen bg-gray-50 dark:bg-slate-900">
 		{@render children()}
 	</div>
 {/if}

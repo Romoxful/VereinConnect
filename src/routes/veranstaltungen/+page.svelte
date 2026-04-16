@@ -13,7 +13,7 @@
 </svelte:head>
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-	<h1 class="text-2xl font-bold text-gray-900">Veranstaltungen</h1>
+	<h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Veranstaltungen</h1>
 	{#if data.user?.role === 'vorstand'}
 		<a
 			href="/veranstaltungen/neu"
@@ -25,22 +25,22 @@
 </div>
 
 {#if upcoming.length > 0}
-	<h2 class="mb-3 text-lg font-semibold text-gray-700">Kommende Termine</h2>
+	<h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-slate-300">Kommende Termine</h2>
 	<div class="mb-8 space-y-3">
 		{#each upcoming as event}
-			<a href="/veranstaltungen/{event.id}" class="block rounded-lg bg-white p-4 shadow hover:shadow-md transition-shadow">
+			<a href="/veranstaltungen/{event.id}" class="block rounded-lg bg-white dark:bg-slate-800 p-4 shadow hover:shadow-md transition-shadow">
 				<div class="flex items-start justify-between gap-3">
 					<div>
-						<h3 class="font-medium text-gray-900">{event.title}</h3>
-						<p class="text-sm text-gray-500">
+						<h3 class="font-medium text-gray-900 dark:text-slate-100">{event.title}</h3>
+						<p class="text-sm text-gray-500 dark:text-slate-400">
 							{new Date(event.date).toLocaleDateString('de-DE', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' })}
 							{#if event.time} um {event.time}{/if}
 						</p>
 						{#if event.location}
-							<p class="text-sm text-gray-400">{event.location}</p>
+							<p class="text-sm text-gray-400 dark:text-slate-500">{event.location}</p>
 						{/if}
 					</div>
-					<span class="shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+					<span class="shrink-0 rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-300">
 						{event.rsvpCount} Zusage{event.rsvpCount !== 1 ? 'n' : ''}
 					</span>
 				</div>
@@ -50,18 +50,18 @@
 {/if}
 
 {#if past.length > 0}
-	<h2 class="mb-3 text-lg font-semibold text-gray-700">Vergangene Termine</h2>
+	<h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-slate-300">Vergangene Termine</h2>
 	<div class="space-y-3">
 		{#each past as event}
-			<a href="/veranstaltungen/{event.id}" class="block rounded-lg bg-white p-4 shadow opacity-75 hover:opacity-100 transition-opacity">
+			<a href="/veranstaltungen/{event.id}" class="block rounded-lg bg-white dark:bg-slate-800 p-4 shadow opacity-75 hover:opacity-100 transition-opacity">
 				<div class="flex items-start justify-between gap-3">
 					<div>
-						<h3 class="font-medium text-gray-900">{event.title}</h3>
-						<p class="text-sm text-gray-500">
+						<h3 class="font-medium text-gray-900 dark:text-slate-100">{event.title}</h3>
+						<p class="text-sm text-gray-500 dark:text-slate-400">
 							{new Date(event.date).toLocaleDateString('de-DE', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' })}
 						</p>
 					</div>
-					<span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+					<span class="shrink-0 rounded-full bg-gray-100 dark:bg-slate-700 px-2 py-0.5 text-xs font-medium text-gray-600 dark:text-slate-400">
 						{event.rsvpCount} Zusage{event.rsvpCount !== 1 ? 'n' : ''}
 					</span>
 				</div>
@@ -71,5 +71,5 @@
 {/if}
 
 {#if data.events.length === 0}
-	<p class="text-gray-500">Noch keine Veranstaltungen erstellt.</p>
+	<p class="text-gray-500 dark:text-slate-400">Noch keine Veranstaltungen erstellt.</p>
 {/if}
