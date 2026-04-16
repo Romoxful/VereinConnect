@@ -123,6 +123,53 @@ describe('Document CRUD integration', () => {
 	});
 });
 
+describe('Category case normalization (regression: issue #21)', () => {
+	it('rejects uppercase category at the CHECK constraint (documents the bug)', () => {
+		expect(() => {
+			sqlite.exec(
+				"INSERT INTO documents (title, filename, original_name, category) VALUES ('Test', 'f.pdf', 'f.pdf', 'Satzung')"
+			);
+		}).toThrow(/CHECK constraint failed/i);
+	});
+
+	it('accepts uppercase category once normalized via toLowerCase', () => {
+		const rawCategory = 'Satzung';
+		const normalized = rawCategory.toLowerCase();
+
+		db.insert(documents)
+			.values({
+				title: 'Satzung 2025',
+				filename: 'sat.pdf',
+				originalName: 'Satzung.pdf',
+				category: normalized as 'satzung',
+				uploadedBy: vorstandId
+			})
+			.run();
+
+		const doc = db.select().from(documents).where(eq(documents.title, 'Satzung 2025')).get();
+		expect(doc!.category).toBe('satzung');
+	});
+
+	it('normalizes every valid category value regardless of input case', () => {
+		const mixedCaseInputs = ['SATZUNG', 'Bescheide', 'FINANZEN', 'Sonstiges'];
+		for (const raw of mixedCaseInputs) {
+			db.insert(documents)
+				.values({
+					title: `Doc-${raw}`,
+					filename: `${raw}.pdf`,
+					originalName: `${raw}.pdf`,
+					category: raw.toLowerCase() as 'satzung' | 'bescheide' | 'finanzen' | 'sonstiges'
+				})
+				.run();
+		}
+		const all = db.select().from(documents).all();
+		expect(all).toHaveLength(mixedCaseInputs.length);
+		for (const doc of all) {
+			expect(doc.category).toBe(doc.category.toLowerCase());
+		}
+	});
+});
+
 describe('Document upload validation logic', () => {
 	const MAX_FILE_SIZE = 10 * 1024 * 1024;
 	const ALLOWED_TYPES = [
