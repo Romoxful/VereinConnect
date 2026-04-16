@@ -154,6 +154,25 @@
 		</form>
 	</div>
 
+	<!-- Bescheinigungen / Ausweis -->
+	<div class="mt-8 border-t border-gray-200 dark:border-slate-700 pt-6">
+		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-slate-100">Bescheinigungen</h2>
+		<div class="flex flex-wrap gap-3">
+			<a href="/api/mitglieder/{m.id}/bescheinigung"
+				class="rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+				Mitgliedsbescheinigung (PDF)
+			</a>
+			<a href="/api/mitglieder/{m.id}/austrittsbescheinigung"
+				class="rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+				Austrittsbestätigung (PDF)
+			</a>
+			<a href="/mitglieder/{m.id}/ausweis"
+				class="rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+				Mitgliedsausweis
+			</a>
+		</div>
+	</div>
+
 	<!-- Payment Status -->
 	<div class="mt-8 border-t border-gray-200 dark:border-slate-700 pt-6">
 		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-slate-100">Beiträge</h2>
@@ -297,6 +316,13 @@
 				<p>{m.notes}</p>
 			</div>
 		{/if}
+	</div>
+
+	<div class="mt-6">
+		<a href="/mitglieder/{m.id}/ausweis"
+			class="inline-block rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+			Mitgliedsausweis anzeigen
+		</a>
 	</div>
 
 	<!-- Payment Status (read-only) -->
