@@ -87,6 +87,21 @@ export const documents = sqliteTable('documents', {
 		.$defaultFn(() => new Date().toISOString())
 });
 
+export const documentVersions = sqliteTable('document_versions', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	documentId: integer('document_id')
+		.notNull()
+		.references(() => documents.id, { onDelete: 'cascade' }),
+	filename: text('filename').notNull(),
+	originalName: text('original_name').notNull(),
+	size: integer('size').notNull().default(0),
+	mimeType: text('mime_type').notNull().default(''),
+	versionNumber: integer('version_number').notNull(),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
 export const protocols = sqliteTable('protocols', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	date: text('date').notNull(),

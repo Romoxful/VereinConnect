@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db/index.js';
-import { documents, users } from '$lib/server/db/schema.js';
+import { documents, documentVersions, users } from '$lib/server/db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import { existsSync, unlinkSync } from 'fs';
 import { join } from 'path';
@@ -40,9 +40,18 @@ export const actions: Actions = {
 		const doc = db.select().from(documents).where(eq(documents.id, id)).get();
 		if (!doc) return fail(404, { error: 'Dokument nicht gefunden.' });
 
-		const filePath = join(UPLOAD_DIR, doc.filename);
-		if (existsSync(filePath)) {
-			unlinkSync(filePath);
+		const versions = db
+			.select({ filename: documentVersions.filename })
+			.from(documentVersions)
+			.where(eq(documentVersions.documentId, id))
+			.all();
+
+		const filenames = new Set<string>([doc.filename, ...versions.map((v) => v.filename)]);
+		for (const name of filenames) {
+			const filePath = join(UPLOAD_DIR, name);
+			if (existsSync(filePath)) {
+				unlinkSync(filePath);
+			}
 		}
 
 		db.delete(documents).where(eq(documents.id, id)).run();

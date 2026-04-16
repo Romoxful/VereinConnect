@@ -64,6 +64,18 @@ const SCHEMA_SQL = `
 		created_at TEXT NOT NULL DEFAULT (datetime('now'))
 	);
 
+	CREATE TABLE IF NOT EXISTS document_versions (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		document_id INTEGER NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+		filename TEXT NOT NULL,
+		original_name TEXT NOT NULL,
+		size INTEGER NOT NULL DEFAULT 0,
+		mime_type TEXT NOT NULL DEFAULT '',
+		version_number INTEGER NOT NULL,
+		created_at TEXT NOT NULL DEFAULT (datetime('now')),
+		UNIQUE(document_id, version_number)
+	);
+
 	CREATE TABLE IF NOT EXISTS protocols (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		date TEXT NOT NULL,
