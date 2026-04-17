@@ -173,6 +173,41 @@ export const tasks = sqliteTable('tasks', {
 		.$defaultFn(() => new Date().toISOString())
 });
 
+export const inventoryCategories = sqliteTable('inventory_categories', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull().unique(),
+	description: text('description'),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
+export const inventoryItems = sqliteTable('inventory_items', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull(),
+	description: text('description'),
+	categoryId: integer('category_id').references(() => inventoryCategories.id, {
+		onDelete: 'set null'
+	}),
+	quantity: integer('quantity').notNull().default(1),
+	location: text('location'),
+	condition: text('condition', {
+		enum: ['neu', 'gut', 'befriedigend', 'mangelhaft', 'defekt']
+	})
+		.notNull()
+		.default('gut'),
+	acquisitionDate: text('acquisition_date'),
+	value: text('value'),
+	notes: text('notes'),
+	createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString()),
+	updatedAt: text('updated_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
 export const consents = sqliteTable('consents', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	memberId: integer('member_id')

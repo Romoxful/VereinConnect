@@ -130,6 +130,29 @@ const SCHEMA_SQL = `
 		created_at TEXT NOT NULL DEFAULT (datetime('now')),
 		updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 	);
+
+	CREATE TABLE IF NOT EXISTS inventory_categories (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL UNIQUE,
+		description TEXT,
+		created_at TEXT NOT NULL DEFAULT (datetime('now'))
+	);
+
+	CREATE TABLE IF NOT EXISTS inventory_items (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		description TEXT,
+		category_id INTEGER REFERENCES inventory_categories(id) ON DELETE SET NULL,
+		quantity INTEGER NOT NULL DEFAULT 1,
+		location TEXT,
+		condition TEXT NOT NULL DEFAULT 'gut' CHECK(condition IN ('neu', 'gut', 'befriedigend', 'mangelhaft', 'defekt')),
+		acquisition_date TEXT,
+		value TEXT,
+		notes TEXT,
+		created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+		created_at TEXT NOT NULL DEFAULT (datetime('now')),
+		updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+	);
 `;
 
 export function createTestDb() {
