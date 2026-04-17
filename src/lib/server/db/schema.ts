@@ -39,6 +39,20 @@ export const members = sqliteTable('members', {
 		.notNull()
 		.default('aktiv'),
 	notes: text('notes'),
+	emailVerifiedAt: text('email_verified_at'),
+	createdAt: text('created_at')
+		.notNull()
+		.$defaultFn(() => new Date().toISOString())
+});
+
+export const emailVerificationTokens = sqliteTable('email_verification_tokens', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	memberId: integer('member_id')
+		.notNull()
+		.references(() => members.id, { onDelete: 'cascade' }),
+	token: text('token').notNull().unique(),
+	expiresAt: text('expires_at').notNull(),
+	usedAt: text('used_at'),
 	createdAt: text('created_at')
 		.notNull()
 		.$defaultFn(() => new Date().toISOString())

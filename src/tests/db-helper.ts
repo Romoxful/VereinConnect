@@ -32,6 +32,16 @@ const SCHEMA_SQL = `
 		member_since TEXT NOT NULL,
 		status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
 		notes TEXT,
+		email_verified_at TEXT,
+		created_at TEXT NOT NULL DEFAULT (datetime('now'))
+	);
+
+	CREATE TABLE IF NOT EXISTS email_verification_tokens (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+		token TEXT NOT NULL UNIQUE,
+		expires_at TEXT NOT NULL,
+		used_at TEXT,
 		created_at TEXT NOT NULL DEFAULT (datetime('now'))
 	);
 
