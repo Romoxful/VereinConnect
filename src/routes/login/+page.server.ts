@@ -4,6 +4,7 @@ import { db } from '$lib/server/db/index.js';
 import { users } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
 import { verifyPassword, createSession } from '$lib/server/auth.js';
+import { hasPendingVerificationForEmail } from '$lib/server/emailVerification.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
@@ -19,6 +20,15 @@ export const actions: Actions = {
 
 		if (!email || !password) {
 			return fail(400, { error: 'Bitte E-Mail und Passwort eingeben.', email });
+		}
+
+		if (hasPendingVerificationForEmail(email)) {
+			return fail(400, {
+				error:
+					'Ihre E-Mail-Adresse wurde noch nicht bestätigt. Bitte öffnen Sie den Bestätigungslink, den wir Ihnen bei der Registrierung gesendet haben.',
+				email,
+				unverified: true
+			});
 		}
 
 		const user = db.select().from(users).where(eq(users.email, email)).get();

@@ -25,9 +25,25 @@
 			<div class="rounded bg-green-50 dark:bg-green-950 p-4 text-sm text-green-700 dark:text-green-300">
 				<p class="font-medium">Vielen Dank für Ihren Aufnahmeantrag!</p>
 				<p class="mt-1">
-					Wir haben Ihren Antrag erhalten. Der Vorstand wird ihn in Kürze prüfen und sich bei
-					Ihnen melden.
+					Wir haben Ihnen einen Bestätigungslink an <strong>{form.email}</strong> gesendet.
+					Bitte öffnen Sie den Link, um Ihre E-Mail-Adresse zu bestätigen. Der Link ist 24 Stunden
+					gültig. Erst nach der Bestätigung wird Ihr Antrag vom Vorstand geprüft.
 				</p>
+				{#if form.verifyUrl}
+					<div class="mt-4 rounded border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-xs">
+						<p class="mb-2 font-medium text-gray-700 dark:text-slate-300">
+							Demo-Modus: Der Versand von E-Mails ist simuliert. Bitte den folgenden Link
+							öffnen, um die Adresse zu bestätigen:
+						</p>
+						<a
+							href={form.verifyUrl}
+							data-testid="verify-link"
+							class="break-all text-red-700 dark:text-red-400 underline"
+						>
+							{form.verifyUrl}
+						</a>
+					</div>
+				{/if}
 			</div>
 		{:else}
 			{#if form?.error}

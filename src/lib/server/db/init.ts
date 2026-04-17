@@ -45,6 +45,16 @@ export function initDatabase() {
 			member_since TEXT NOT NULL,
 			status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
 			notes TEXT,
+			email_verified_at TEXT,
+			created_at TEXT NOT NULL DEFAULT (datetime('now'))
+		);
+
+		CREATE TABLE IF NOT EXISTS email_verification_tokens (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+			token TEXT NOT NULL UNIQUE,
+			expires_at TEXT NOT NULL,
+			used_at TEXT,
 			created_at TEXT NOT NULL DEFAULT (datetime('now'))
 		);
 
@@ -165,6 +175,7 @@ export function initDatabase() {
 				member_since TEXT NOT NULL,
 				status TEXT NOT NULL DEFAULT 'aktiv' CHECK(status IN ('aktiv', 'inaktiv', 'ausgetreten', 'beantragt', 'abgelehnt')),
 				notes TEXT,
+				email_verified_at TEXT,
 				created_at TEXT NOT NULL DEFAULT (datetime('now'))
 			);
 			INSERT INTO members_new (id, first_name, last_name, email, phone, street, zip, city, member_since, status, notes, created_at)
@@ -174,6 +185,17 @@ export function initDatabase() {
 			COMMIT;
 			PRAGMA foreign_keys = ON;
 		`);
+	}
+
+	// Migration: add email_verified_at column to members and backfill existing rows as verified
+	const membersColumns = sqlite
+		.prepare(`PRAGMA table_info(members)`)
+		.all() as { name: string }[];
+	if (!membersColumns.some((c) => c.name === 'email_verified_at')) {
+		sqlite.exec(`ALTER TABLE members ADD COLUMN email_verified_at TEXT`);
+		sqlite.exec(
+			`UPDATE members SET email_verified_at = created_at WHERE email_verified_at IS NULL`
+		);
 	}
 
 	// Seed default admin user if no users exist

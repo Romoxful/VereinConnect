@@ -2,9 +2,10 @@ import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/server/db/index.js';
 import { members, consents } from '$lib/server/db/schema.js';
+import { createEmailVerificationToken } from '$lib/server/emailVerification.js';
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	default: async ({ request, url }) => {
 		const data = await request.formData();
 
 		const firstName = data.get('firstName')?.toString()?.trim() ?? '';
@@ -63,6 +64,9 @@ export const actions: Actions = {
 			.values({ memberId: result.id, consentType: 'datenverarbeitung' })
 			.run();
 
-		return { success: true };
+		const { token } = createEmailVerificationToken(result.id);
+		const verifyUrl = `${url.origin}/aufnahme/bestaetigen?token=${token}`;
+
+		return { success: true, email, verifyUrl };
 	}
 };
